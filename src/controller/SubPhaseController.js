@@ -1,22 +1,22 @@
 const knex = require("../database/knex")
 const AppError = require("../utils/AppError");
 
-class PhaseController {
+class SubPhaseController {
     async create(req, res) {
-        const { name, process_id } = req.body
+        const { name, done, phase_id } = req.body
 
-        await knex("phases").insert({ name, process_id })
+        await knex("subphases").insert({ name, done, phase_id })
 
-        return res.status(201).json(`Etapa cadastrada com sucesso!`)
+        return res.status(201).json(`Sub etapa cadastrada com sucesso!`)
     }
 
     async update(req, res) {
-        const { name, process_id } = req.body
+        const { name, done, phase_id } = req.body
         const { id } = req.params
 
-        const phase = await knex("phases").where({ id }).first()
+        const subphase = await knex("subphases").where({ id }).first()
 
-        if (!phase) {
+        if (!subphase) {
             throw new AppError(`Etapa não econtrada no sistema`)
         }
 
@@ -28,14 +28,14 @@ class PhaseController {
         //     throw new AppError("A etapa anterior precisa estar concluída antes de marcar esta etapa como concluída");
         // }
 
-        phase.name = name ?? phase.name
-        phase.process_id = process_id ?? phase.process_id
+        subphase.name = name ?? subphase.name
+        subphase.done = done ?? subphase.done
+        subphase.phase_id = phase_id ?? subphase.phase_id
 
-        await knex("phases").update({ name, process_id, updated_at: knex.fn.now() }).where({ id })
+        await knex("subphases").update({ name, done, phase_id, updated_at: knex.fn.now() }).where({ id })
 
         return res.status(201).json(`Etapa atualizada com sucesso!`)
     }
- 
 }
 
-module.exports = PhaseController;
+module.exports = SubPhaseController;

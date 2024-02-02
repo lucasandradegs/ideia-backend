@@ -1,8 +1,7 @@
 exports.up = knex => knex.schema.createTable("phases", table => {
     table.increments("id");
     table.text("name").notNullable();
-    table.boolean("done").notNullable();
-    
+    table.text("image");
     table.integer("process_id").references("id").inTable("process")
 
     table.timestamp("created_at").default(knex.fn.now());
